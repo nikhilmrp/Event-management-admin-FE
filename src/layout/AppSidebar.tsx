@@ -28,39 +28,43 @@ type NavItem = {
 
 const navItems: NavItem[] = [
     {
-        icon: <GridIcon />,
-        name: "Dashboard",
-        subItems: [{ name: "Ecommerce", path: "/", pro: false }]
-    },
-    {
-        icon: <CalenderIcon />,
-        name: "Calendar",
-        path: "/calendar"
-    },
-    {
         icon: <UserCircleIcon />,
-        name: "User Profile",
-        path: "/profile"
-    },
-
-    {
-        name: "Forms",
-        icon: <ListIcon />,
+        name: "Profiles",
         subItems: [
-            { name: "Form Elements", path: "/form-elements", pro: false }
+            { name: "Agents", path: "/agents", pro: false },
+            { name: "Vendors", path: "/vendors", pro: false }
         ]
     },
     {
-        name: "Tables",
-        icon: <TableIcon />,
-        subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }]
+        icon: <CalenderIcon />,
+        name: "Events",
+        path: "/events",
+        subItems: [
+            { name: "Pending", path: "/pending-events", pro: false },
+            { name: "Confirmed", path: "/confirmed-events", pro: false }
+        ]
     },
     {
-        name: "Pages",
-        icon: <PageIcon />,
+        name: "Earnings",
+        icon: <ListIcon />,
         subItems: [
-            { name: "Blank Page", path: "/blank", pro: false },
-            { name: "404 Error", path: "/error-404", pro: false }
+            { name: "Agent", path: "/agent-earnings", pro: false },
+            { name: "Vendor", path: "/vendor-earnings", pro: false }
+        ]
+    },
+    {
+        icon: <UserCircleIcon />,
+        name: "Bank Details",
+        path: "/bank-details"
+    },
+
+    {
+        name: "Configurations",
+        icon: <ListIcon />,
+        subItems: [
+            { name: "Vendor Type", path: "/vendor-type", pro: false },
+            { name: "Vendor Category", path: "/vendor-category", pro: false },
+            { name: "Locations", path: "/vendor-locations", pro: false }
         ]
     }
 ];
@@ -386,7 +390,7 @@ const AppSidebar: React.FC = () => {
                             {renderMenuItems(navItems, "main")}
                         </div>
 
-                        <div className="">
+                        {/* <div className="">
                             <h2
                                 className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
                                     !isExpanded && !isHovered
@@ -401,7 +405,7 @@ const AppSidebar: React.FC = () => {
                                 )}
                             </h2>
                             {renderMenuItems(othersItems, "others")}
-                        </div>
+                        </div> */}
                     </div>
                 </nav>
                 {/* {isExpanded || isHovered || isMobileOpen ? <SidebarWidget /> : null} */}

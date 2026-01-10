@@ -28,37 +28,43 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   {
-    icon: <GridIcon />,
-    name: "Dashboard",
-    subItems: [{ name: "Ecommerce", path: "/", pro: false }],
+    icon: <UserCircleIcon />,
+    name: "Profiles",
+    subItems: [
+      { name: "Agents", path: "/profiles/agents", pro: false },
+      { name: "Vendors", path: "/profiles/vendors", pro: false },
+    ],
   },
   {
     icon: <CalenderIcon />,
-    name: "Calendar",
-    path: "/calendar",
+    name: "Events",
+    path: "/events",
+    subItems: [
+      { name: "Pending", path: "/pending-events", pro: false },
+      { name: "Confirmed", path: "/confirmed-events", pro: false },
+    ],
+  },
+  {
+    name: "Earnings",
+    icon: <ListIcon />,
+    subItems: [
+      { name: "Agent", path: "/agent-earnings", pro: false },
+      { name: "Vendor", path: "/vendor-earnings", pro: false },
+    ],
   },
   {
     icon: <UserCircleIcon />,
-    name: "User Profile",
-    path: "/profile",
+    name: "Bank Details",
+    path: "/bank-details",
   },
 
   {
-    name: "Forms",
+    name: "Configurations",
     icon: <ListIcon />,
-    subItems: [{ name: "Form Elements", path: "/form-elements", pro: false }],
-  },
-  {
-    name: "Tables",
-    icon: <TableIcon />,
-    subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
-  },
-  {
-    name: "Pages",
-    icon: <PageIcon />,
     subItems: [
-      { name: "Blank Page", path: "/blank", pro: false },
-      { name: "404 Error", path: "/error-404", pro: false },
+      { name: "Vendor Type", path: "/vendor-type", pro: false },
+      { name: "Vendor Category", path: "/vendor-category", pro: false },
+      { name: "Locations", path: "/vendor-locations", pro: false },
     ],
   },
 ];
@@ -356,25 +362,25 @@ const AppSidebar: React.FC = () => {
               {renderMenuItems(navItems, "main")}
             </div>
 
-            <div className="">
-              <h2
-                className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
-                  !isExpanded && !isHovered
-                    ? "lg:justify-center"
-                    : "justify-start"
-                }`}
-              >
-                {isExpanded || isHovered || isMobileOpen ? (
-                  "Others"
-                ) : (
-                  <HorizontaLDots />
-                )}
-              </h2>
-              {renderMenuItems(othersItems, "others")}
-            </div>
+            {/* <div className="">
+                            <h2
+                                className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
+                                    !isExpanded && !isHovered
+                                        ? "lg:justify-center"
+                                        : "justify-start"
+                                }`}
+                            >
+                                {isExpanded || isHovered || isMobileOpen ? (
+                                    "Others"
+                                ) : (
+                                    <HorizontaLDots />
+                                )}
+                            </h2>
+                            {renderMenuItems(othersItems, "others")}
+                        </div> */}
           </div>
         </nav>
-        {isExpanded || isHovered || isMobileOpen ? <SidebarWidget /> : null}
+        {/* {isExpanded || isHovered || isMobileOpen ? <SidebarWidget /> : null} */}
       </div>
     </aside>
   );

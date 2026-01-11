@@ -1,16 +1,14 @@
-import { Button } from "@/components/ui/button";
+import AddVendorModal from "@/components/ui/modal/AddVendorModal";
 import BasicTable from "@/components/ui/table/BasicTable";
-import React from "react";
 
-function page() {
+export default function Page() {
     return (
         <div>
             <div className="flex justify-end mb-4">
-                <Button>Add Vendor</Button>
+                <AddVendorModal />
             </div>
+
             <BasicTable />
         </div>
     );
 }
-
-export default page;

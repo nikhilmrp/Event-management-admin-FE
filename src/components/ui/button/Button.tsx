@@ -1,14 +1,11 @@
-import React, { ReactNode } from "react";
+import * as React from "react";
 
-interface ButtonProps {
-  children: ReactNode; // Button text or content
+interface ButtonProps extends React.ComponentProps<"button"> {
+  children: React.ReactNode; // Button text or content
   size?: "sm" | "md"; // Button size
   variant?: "primary" | "outline"; // Button variant
-  startIcon?: ReactNode; // Icon before the text
-  endIcon?: ReactNode; // Icon after the text
-  onClick?: () => void; // Click handler
-  disabled?: boolean; // Disabled state
-  className?: string; // Disabled state
+  startIcon?: React.ReactNode; // Icon before the text
+  endIcon?: React.ReactNode; // Icon after the text
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -20,6 +17,7 @@ const Button: React.FC<ButtonProps> = ({
   onClick,
   className = "",
   disabled = false,
+  ...props
 }) => {
   // Size Classes
   const sizeClasses = {
@@ -44,6 +42,7 @@ const Button: React.FC<ButtonProps> = ({
       }`}
       onClick={onClick}
       disabled={disabled}
+      {...props}
     >
       {startIcon && <span className="flex items-center">{startIcon}</span>}
       {children}

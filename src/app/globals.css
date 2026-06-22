@@ -186,6 +186,46 @@
   body {
     @apply relative font-normal font-outfit z-1 bg-gray-50;
   }
+
+  input,
+  textarea,
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: transparent;
+    background-image: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    line-height: inherit;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+  }
 }
 
 @utility menu-item {

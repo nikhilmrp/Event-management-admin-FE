@@ -1,4 +1,3 @@
-import AddVendorModal from "@/components/ui/modal/AddVendorModal";
 import BasicTable from "@/components/ui/table/BasicTable";
 import React from "react";
 

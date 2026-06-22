@@ -28,7 +28,8 @@ export default function SignInForm() {
           password,
         },
       });
-      const { status, id, ...user } = response.data.user;
+      const { status, id, ...rest } = response.data.user;
+      const user = rest;
       Cookies.set("token", response.data.token);
       setUser(user);
       router.push("/");

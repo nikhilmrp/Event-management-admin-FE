@@ -1,16 +1,14 @@
+"use client";
 import BasicTable from "@/components/ui/table/BasicTable";
-import { TabsContent } from "@/components/ui/tabs/tabs";
+import { useAuth } from "@/context/AuthContext";
 import React from "react";
 
 function page() {
+  const { user } = useAuth();
+  console.log(user);
   return (
     <>
-      <TabsContent value={"confirmed"}>
-        <BasicTable />
-      </TabsContent>
-      <TabsContent value={"pending"}>
-        <BasicTable />
-      </TabsContent>
+      <BasicTable />
     </>
   );
 }

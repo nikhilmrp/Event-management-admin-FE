@@ -1,23 +1,21 @@
 import { networkCall } from "../../config";
 import { API_ENDPOINTS } from "../../endpoints";
 
-interface CreateVendorTypeProps {
+interface CreateLocationProps {
   name: string;
-  commission_percentage: number;
   status: boolean;
 }
 
-export interface VendorType {
+export interface Location {
   id: number;
   name: string;
-  commission_percentage: number;
   status: boolean;
   createdAt: Date;
 }
 
-export const createVendorType = async (data: CreateVendorTypeProps) => {
+export const createLocation = async (data: CreateLocationProps) => {
   try {
-    const response = await networkCall(API_ENDPOINTS.CREATE_VENDOR_TYPE, {
+    const response = await networkCall(API_ENDPOINTS.CREATE_LOCATION, {
       method: "POST",
       body: data,
     });
@@ -27,9 +25,9 @@ export const createVendorType = async (data: CreateVendorTypeProps) => {
   }
 };
 
-export const getVendorAllTypes = async () => {
+export const getAllLocations = async () => {
   try {
-    const response = await networkCall<VendorType[]>(API_ENDPOINTS.GET_ALL_VENDOR_TYPES, {
+    const response = await networkCall<Location[]>(API_ENDPOINTS.GET_ALL_LOCATIONS, {
       method: "GET",
     });
     return response.data;

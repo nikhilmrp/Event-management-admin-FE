@@ -12,11 +12,12 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const user = Cookies.get("user");
+    const token = Cookies.get("token");
     const isPublicPath = PUBLIC_PATHS.some(
       (path) => pathname === path || pathname.startsWith(`${path}/`)
     );
 
-    if (!user && !isPublicPath) {
+    if ((!user || !token) && !isPublicPath) {
       router.replace("/signin");
     }
   }, [pathname, router]);

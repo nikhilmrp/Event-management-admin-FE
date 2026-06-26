@@ -907,3 +907,29 @@ span.flatpickr-weekday,
     @apply bg-background text-foreground;
   }
 }
+
+/* Toast notifications */
+.Toastify__toast-container {
+  z-index: var(--z-index-999999) !important;
+}
+
+.Toastify__toast.app-toast {
+  @apply rounded-xl font-outfit text-sm shadow-theme-sm;
+  min-height: 52px;
+}
+
+.Toastify__toast--success {
+  @apply bg-success-500 text-white;
+}
+
+.Toastify__toast--error {
+  @apply bg-error-500 text-white;
+}
+
+.Toastify__toast--info {
+  @apply bg-blue-light-500 text-white;
+}
+
+.Toastify__progress-bar {
+  @apply bg-white/40;
+}

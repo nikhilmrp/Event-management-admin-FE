@@ -4,12 +4,13 @@ import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { Button } from "../button";
-import { Modal } from ".";
+import { Button } from "../../ui/button";
+import { Modal } from "../../ui/modal";
 import Label from "@/components/form/input/Label";
 import Input from "@/components/form/input/InputField";
 import ToggleButton from "@/components/form/ToggleButton";
 import { createVendorType } from "@/lib/api/services/configrations/vendortype";
+import { toast } from "@/components/ui/toast";
 
 const vendorTypeSchema = yup.object({
   name: yup.string().trim().required("Vendor type name is required"),
@@ -24,7 +25,11 @@ const vendorTypeSchema = yup.object({
 
 type VendorTypeFormData = yup.InferType<typeof vendorTypeSchema>;
 
-export default function AddVendorModal() {
+interface AddVendorTypeModalProps {
+  onSuccess?: () => void;
+}
+
+export default function AddVendorTypeModal({ onSuccess }: AddVendorTypeModalProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const {
@@ -49,14 +54,18 @@ export default function AddVendorModal() {
 
   const onSubmit = async (data: VendorTypeFormData) => {
     try {
-      await createVendorType({
+      const res = await createVendorType({
         name: data.name,
         commission_percentage: data.commission_percentage,
         status: data.status,
       });
+      toast.success(
+        (res.data as { message: string }).message || "Vendor type created successfully"
+      );
+      onSuccess?.();
       handleClose();
     } catch (error) {
-      console.error(error);
+      toast.error((error as any).data.message);
     }
   };
 

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 
 export const API_CONFIG = {
@@ -17,16 +17,35 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-export const networkCall = async (url: string, options: { method: string; body: any }) => {
+export interface ApiResponse<T> {
+  data: T;
+  message: string;
+  statusCode: number;
+  success: boolean;
+}
+
+export interface ApiError {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  stack: string;
+}
+
+export const networkCall = async <T>(
+  url: string,
+  options: { method: string; body?: unknown }
+): Promise<AxiosResponse<ApiResponse<T>>> => {
   try {
-    const response = await apiClient({
+    const response = await apiClient<ApiResponse<T>>({
       url,
-      method: (options.method as string) ?? "GET",
+      method: options.method ?? "GET",
       data: options.body,
     });
-    return response.data;
+    return response;
   } catch (error) {
-    console.error("Network call error:", error);
+    if (axios.isAxiosError<ApiError>(error) && error.response?.data !== undefined) {
+      throw error.response as AxiosResponse<ApiError>;
+    }
     throw error;
   }
 };

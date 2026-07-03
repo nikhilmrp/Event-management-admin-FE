@@ -4,13 +4,14 @@ import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { Button } from "../../ui/button";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Modal } from "../../ui/modal";
 import Label from "@/components/form/input/Label";
 import Input from "@/components/form/input/InputField";
 import ToggleButton from "@/components/form/ToggleButton";
 import { toast } from "@/components/ui/toast";
 import { createLocation } from "@/lib/api/services/configrations/location";
+import Button from "@/components/ui/button/Button";
 
 const locationSchema = yup.object({
   name: yup.string().trim().required("Location name is required"),
@@ -25,13 +26,14 @@ interface AddLocationModalProps {
 
 export default function AddLocationModal({ onSuccess }: AddLocationModalProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const {
     register,
     handleSubmit,
     control,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LocationFormData>({
     resolver: yupResolver(locationSchema),
     defaultValues: {
@@ -45,17 +47,27 @@ export default function AddLocationModal({ onSuccess }: AddLocationModalProps) {
     reset();
   };
 
+  const { mutateAsync: createLocationMutation, isPending: isSubmitting } = useMutation({
+    mutationFn: createLocation,
+    onSuccess: (res) => {
+      toast.success((res.data as { message: string }).message || "Location created successfully");
+      queryClient.invalidateQueries({ queryKey: ["locations"] });
+      onSuccess?.();
+      handleClose();
+    },
+    onError: (error) => {
+      toast.error((error as any).data.message);
+    },
+  });
+
   const onSubmit = async (data: LocationFormData) => {
     try {
-      const res = await createLocation({
+      await createLocationMutation({
         name: data.name,
         status: data.status,
       });
-      toast.success((res.data as { message: string }).message || "Location created successfully");
-      onSuccess?.();
-      handleClose();
-    } catch (error) {
-      toast.error((error as any).data.message);
+    } catch {
+      // handled by mutation's onError
     }
   };
 

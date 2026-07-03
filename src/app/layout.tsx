@@ -7,6 +7,7 @@ import { SidebarProvider } from "@/context/SidebarContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { ConfigrationProvider } from "@/context/configrationContext";
+import { QueryProvider } from "@/context/QueryProvider";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -20,16 +21,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${outfit.className} dark:bg-gray-900`}>
-        <ThemeProvider>
-          <AuthProvider>
-            <AuthGuard>
-              <ConfigrationProvider>
-                <SidebarProvider>{children}</SidebarProvider>
-              </ConfigrationProvider>
-            </AuthGuard>
-          </AuthProvider>
-          <ToastProvider />
-        </ThemeProvider>
+        <QueryProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              <AuthGuard>
+                <ConfigrationProvider>
+                  <SidebarProvider>{children}</SidebarProvider>
+                </ConfigrationProvider>
+              </AuthGuard>
+            </AuthProvider>
+            <ToastProvider />
+          </ThemeProvider>
+        </QueryProvider>
       </body>
     </html>
   );

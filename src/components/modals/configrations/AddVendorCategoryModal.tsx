@@ -3,12 +3,13 @@
 import { FormSelect, SelectOption } from "@/components/form/input/SelectField";
 import Label from "@/components/form/input/Label";
 import ToggleButton from "@/components/form/ToggleButton";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/ui/button/Button";
 import { Controller, Resolver, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Modal } from "@/components/ui/modal";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Input from "@/components/form/input/InputField";
 import { getVendorAllTypes } from "@/lib/api/services/configrations/vendortype";
 import { createVendorCategory } from "@/lib/api/services/configrations/vendorCategries";
@@ -34,13 +35,13 @@ type VendorCategoryFormData = {
 
 const AddVendorCategoryModal = ({ onSuccess }: { onSuccess?: () => void }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [vendorTypes, setVendorTypes] = useState<SelectOption[]>([]);
+  const queryClient = useQueryClient();
   const {
     register,
     control,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<VendorCategoryFormData>({
     resolver: yupResolver(vendorCategorySchema) as Resolver<VendorCategoryFormData>,
     defaultValues: {
@@ -55,36 +56,43 @@ const AddVendorCategoryModal = ({ onSuccess }: { onSuccess?: () => void }) => {
     reset();
   };
 
+  const { mutateAsync: createVendorCategoryMutation, isPending: isSubmitting } = useMutation({
+    mutationFn: createVendorCategory,
+    onSuccess: (res) => {
+      toast.success(
+        (res.data as { message: string }).message || "Vendor category created successfully"
+      );
+      queryClient.invalidateQueries({ queryKey: ["vendor-categories"] });
+      onSuccess?.();
+      handleClose();
+    },
+    onError: (error) => {
+      toast.error((error as any).data.message);
+    },
+  });
+
   const onSubmit = async (data: VendorCategoryFormData) => {
-    console.log(data);
     try {
-      const res = await createVendorCategory({
+      await createVendorCategoryMutation({
         name: data.name,
         vendor_type_id: data.vendor_type_id ?? 0,
         status: data.status,
       });
-      toast.success(
-        (res.data as { message: string }).message || "Vendor category created successfully"
-      );
-      onSuccess?.();
-      handleClose();
-    } catch (error) {
-      toast.error((error as any).data.message);
+    } catch {
+      // handled by mutation's onError
     }
   };
 
-  const fetchVendorTypes = async () => {
-    const res = await getVendorAllTypes();
-    const frVendorTypes = res.data?.map((vendorType) => ({
-      label: vendorType.name,
-      value: vendorType.id,
-    }));
-    setVendorTypes(frVendorTypes);
-  };
-
-  useEffect(() => {
-    fetchVendorTypes();
-  }, []);
+  const { data: vendorTypes = [] } = useQuery({
+    queryKey: ["vendor-types"],
+    queryFn: async () => {
+      const res = await getVendorAllTypes();
+      return res.data?.map((vendorType) => ({
+        label: vendorType.name,
+        value: vendorType.id,
+      })) as SelectOption[];
+    },
+  });
 
   return (
     <div>

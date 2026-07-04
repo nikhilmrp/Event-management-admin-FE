@@ -1,10 +1,19 @@
+"use client";
 import BasicTable from "@/components/ui/table/BasicTable";
 import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { VENDOR_PROFILE_COLUMNS } from "@/components/columns/profiles";
+import { getProfileDetailsByRole } from "@/lib/api/services/profiles/general";
 
 function page() {
+  const { data: vendors = [], isLoading } = useQuery({
+    queryKey: ["profiles", "vendor"],
+    queryFn: async () => (await getProfileDetailsByRole("vendor")).data,
+  });
+
   return (
     <>
-      <BasicTable />
+      <BasicTable columns={VENDOR_PROFILE_COLUMNS} data={vendors} loading={isLoading} />
     </>
   );
 }

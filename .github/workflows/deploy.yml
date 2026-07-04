@@ -20,6 +20,11 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            export NVM_DIR="/home/eventadmin-dev/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+            nvm use 24
+
             cd /home/eventadmin-dev/public_html
 
             git pull origin dev

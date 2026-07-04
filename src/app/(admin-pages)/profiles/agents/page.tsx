@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AGENT_PROFILE_COLUMNS } from "@/components/columns/profiles";
 import { getProfileDetailsByRole } from "@/lib/api/services/profiles/general";
 
-function page() {
+function Page() {
   const { data: agents = [], isLoading } = useQuery({
     queryKey: ["profiles", "agent"],
     queryFn: async () => (await getProfileDetailsByRole("agent")).data,
@@ -18,4 +18,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;

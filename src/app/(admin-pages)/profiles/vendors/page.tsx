@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { VENDOR_PROFILE_COLUMNS } from "@/components/columns/profiles";
 import { getProfileDetailsByRole } from "@/lib/api/services/profiles/general";
 
-function page() {
+function Page() {
   const { data: vendors = [], isLoading } = useQuery({
     queryKey: ["profiles", "vendor"],
     queryFn: async () => (await getProfileDetailsByRole("vendor")).data,
@@ -18,4 +18,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;

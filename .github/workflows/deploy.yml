@@ -33,6 +33,6 @@ jobs:
 
             npm run build
 
-            pm2 start npm --name eventadmin-dev -- start
+            pm2 restart eventadmin-dev || pm2 start npm --name eventadmin-dev -- start
 
             pm2 save

@@ -1,44 +1,77 @@
 "use client";
+
 import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/input/Label";
 import Button from "@/components/ui/button/Button";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth, User } from "@/context/AuthContext";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import { networkCall } from "@/lib/api/config";
 import { API_ENDPOINTS } from "@/lib/api/endpoints";
+import { yupResolver } from "@hookform/resolvers/yup";
+import Cookies from "js-cookie";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
-import Cookies from "js-cookie";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "@/components/ui/toast";
+import * as yup from "yup";
+
+const signInSchema = yup.object({
+  email: yup
+    .string()
+    .trim()
+    .required("Email is required")
+    .email("Please enter a valid email address"),
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(6, "Password must be at least 6 characters"),
+});
+
+type SignInFormData = yup.InferType<typeof signInSchema>;
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const { setUser, user } = useAuth();
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
+  const { setUser } = useAuth();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignInFormData>({
+    resolver: yupResolver(signInSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  type LoginResponse = {
+    user: User & { status: number };
+    token: string;
+  };
+
+  const onSubmit = async (data: SignInFormData) => {
     try {
-      const response = await networkCall(API_ENDPOINTS.ADMIN_LOGIN, {
+      const response = await networkCall<LoginResponse>(API_ENDPOINTS.ADMIN_LOGIN, {
         method: "POST",
         body: {
-          email,
-          password,
+          email: data.email,
+          password: data.password,
         },
       });
-      const { status, id, ...rest } = response.data.user;
+      const { status, ...rest } = response.data.data.user;
       const user = rest;
-      Cookies.set("token", response.data.token);
+      Cookies.set("token", response.data.data.token);
       setUser(user);
+      toast.success(response.data.message || "Logged in successfully");
       router.push("/");
     } catch (error) {
-      console.error(error);
+      toast.error((error as any).data.message);
     }
   };
 
-  console.log(user);
   return (
     <div className=" w-full">
       <div className="w-full max-w-md sm:pt-10 mx-auto mb-5">
@@ -54,20 +87,26 @@ export default function SignInForm() {
         <div>
           <div className="mb-5 sm:mb-8">
             <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
-              Sign In
+              Sign In to your account
             </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">
               Enter your email and password to sign in!
             </p>
           </div>
           <div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="space-y-6">
                 <div>
                   <Label>
                     Email <span className="text-error-500">*</span>{" "}
                   </Label>
-                  <Input placeholder="info@gmail.com" type="email" name="email" />
+                  <Input
+                    placeholder="info@gmail.com"
+                    type="email"
+                    error={!!errors.email}
+                    hint={errors.email?.message}
+                    {...register("email")}
+                  />
                 </div>
                 <div>
                   <Label>
@@ -77,7 +116,9 @@ export default function SignInForm() {
                     <Input
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter your password"
-                      name="password"
+                      error={!!errors.password}
+                      hint={errors.password?.message}
+                      {...register("password")}
                     />
                     <span
                       onClick={() => setShowPassword(!showPassword)}
@@ -92,8 +133,8 @@ export default function SignInForm() {
                   </div>
                 </div>
                 <div>
-                  <Button className="w-full" size="sm">
-                    Sign in
+                  <Button type="submit" className="w-full" size="sm" disabled={isSubmitting}>
+                    {isSubmitting ? "Signing in..." : "Sign in"}
                   </Button>
                 </div>
               </div>

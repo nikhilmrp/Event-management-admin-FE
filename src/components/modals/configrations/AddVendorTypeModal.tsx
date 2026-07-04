@@ -4,12 +4,14 @@ import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { Button } from "../button";
-import { Modal } from ".";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Modal } from "../../ui/modal";
 import Label from "@/components/form/input/Label";
 import Input from "@/components/form/input/InputField";
 import ToggleButton from "@/components/form/ToggleButton";
 import { createVendorType } from "@/lib/api/services/configrations/vendortype";
+import { toast } from "@/components/ui/toast";
+import Button from "@/components/ui/button/Button";
 
 const vendorTypeSchema = yup.object({
   name: yup.string().trim().required("Vendor type name is required"),
@@ -24,15 +26,20 @@ const vendorTypeSchema = yup.object({
 
 type VendorTypeFormData = yup.InferType<typeof vendorTypeSchema>;
 
-export default function AddVendorModal() {
+interface AddVendorTypeModalProps {
+  onSuccess?: () => void;
+}
+
+export default function AddVendorTypeModal({ onSuccess }: AddVendorTypeModalProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const {
     register,
     handleSubmit,
     control,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<VendorTypeFormData>({
     resolver: yupResolver(vendorTypeSchema),
     defaultValues: {
@@ -47,16 +54,30 @@ export default function AddVendorModal() {
     reset();
   };
 
+  const { mutateAsync: createVendorTypeMutation, isPending: isSubmitting } = useMutation({
+    mutationFn: createVendorType,
+    onSuccess: (res) => {
+      toast.success(
+        (res.data as { message: string }).message || "Vendor type created successfully"
+      );
+      queryClient.invalidateQueries({ queryKey: ["vendor-types"] });
+      onSuccess?.();
+      handleClose();
+    },
+    onError: (error) => {
+      toast.error((error as any).data.message);
+    },
+  });
+
   const onSubmit = async (data: VendorTypeFormData) => {
     try {
-      await createVendorType({
+      await createVendorTypeMutation({
         name: data.name,
         commission_percentage: data.commission_percentage,
         status: data.status,
       });
-      handleClose();
-    } catch (error) {
-      console.error(error);
+    } catch {
+      // handled by mutation's onError
     }
   };
 

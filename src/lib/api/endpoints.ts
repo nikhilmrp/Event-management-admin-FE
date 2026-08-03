@@ -8,4 +8,5 @@ export const API_ENDPOINTS = {
   CREATE_VENDOR_CATEGORY: "/config/create-vendor-category",
   GET_ALL_VENDOR_CATEGORIES: "/config/get-all-vendor-categories",
   GET_PROFILE_DETAILS: "/profile/general/get-profile-details",
+  GET_PROFILE_DETAILS_BY_ID: "/profile/general/get-profile-details-by-id",
 };

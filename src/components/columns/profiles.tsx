@@ -1,5 +1,14 @@
-import { ProfileDetails } from "@/lib/api/services/profiles/general";
+import { ProfileDetails, ProfileRole } from "@/lib/api/services/profiles/general";
 import { ColumnDef } from "../ui/table/BasicTable";
+import ProfileAprovalModal from "../modals/profile/ProfileAprovalModal";
+
+const createActionColumn = (role: ProfileRole): ColumnDef<ProfileDetails>[] => [
+  {
+    key: "action",
+    header: "Action",
+    cell: (row) => <ProfileAprovalModal profileId={row.id} role={role} />,
+  },
+];
 
 export const AGENT_PROFILE_COLUMNS: ColumnDef<ProfileDetails>[] = [
   {
@@ -22,6 +31,7 @@ export const AGENT_PROFILE_COLUMNS: ColumnDef<ProfileDetails>[] = [
     header: "Locations",
     cell: (row) => <div>{row.locations.join(", ")}</div>,
   },
+  ...createActionColumn(ProfileRole.AGENT),
 ];
 
 export const VENDOR_PROFILE_COLUMNS: ColumnDef<ProfileDetails>[] = [
@@ -60,4 +70,5 @@ export const VENDOR_PROFILE_COLUMNS: ColumnDef<ProfileDetails>[] = [
     header: "Locations",
     cell: (row) => <div>{row.locations.join(", ")}</div>,
   },
+  ...createActionColumn(ProfileRole.VENDOR),
 ];

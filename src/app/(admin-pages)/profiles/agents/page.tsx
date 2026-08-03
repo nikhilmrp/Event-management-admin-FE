@@ -3,12 +3,12 @@ import BasicTable from "@/components/ui/table/BasicTable";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { AGENT_PROFILE_COLUMNS } from "@/components/columns/profiles";
-import { getProfileDetailsByRole } from "@/lib/api/services/profiles/general";
+import { getProfileDetailsByRole, ProfileRole } from "@/lib/api/services/profiles/general";
 
 function Page() {
   const { data: agents = [], isLoading } = useQuery({
     queryKey: ["profiles", "agent"],
-    queryFn: async () => (await getProfileDetailsByRole("agent")).data,
+    queryFn: async () => (await getProfileDetailsByRole(ProfileRole.AGENT)).data,
   });
 
   return (

@@ -9,6 +9,7 @@ export enum ProfileRole {
 export interface ProfileDetails {
   id: number;
   username: string;
+  userId: number;
   status: string;
   locations: string[];
   email: string;
@@ -20,10 +21,14 @@ export interface ProfileDetails {
   vendor_categories?: string[];
 }
 
-export const getProfileDetailsByRole = async (role: ProfileRole) => {
+export const getProfileDetailsByRole = async (role: ProfileRole, emailVerified?: boolean) => {
   try {
+    const query =
+      emailVerified === undefined
+        ? `role=${role}`
+        : `role=${role}&email_verified=${emailVerified}`;
     const response = await networkCall<ProfileDetails[]>(
-      `${API_ENDPOINTS.GET_PROFILE_DETAILS}?role=${role}`,
+      `${API_ENDPOINTS.GET_PROFILE_DETAILS}?${query}`,
       {
         method: "GET",
       }
@@ -99,15 +104,31 @@ export interface AgentProfileDetails {
   bank_details: BankDetails;
 }
 
-export const getProfileDetailsById = async (
-  profileId: number | string,
-  role: ProfileRole
-) => {
+export const getProfileDetailsById = async (profileId: number | string, role: ProfileRole) => {
   try {
     const response = await networkCall<VendorProfileDetails | AgentProfileDetails>(
       `${API_ENDPOINTS.GET_PROFILE_DETAILS_BY_ID}/${profileId}?role=${role}`,
       {
         method: "GET",
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export interface ApproveUserProfileResponse {
+  id: number;
+  email_verified: boolean;
+}
+
+export const approveUserProfile = async (userId: number | string) => {
+  try {
+    const response = await networkCall<ApproveUserProfileResponse>(
+      `${API_ENDPOINTS.APPROVE_USER_PROFILE}/${userId}`,
+      {
+        method: "PATCH",
       }
     );
     return response.data;

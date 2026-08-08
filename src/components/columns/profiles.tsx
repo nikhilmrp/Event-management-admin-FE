@@ -1,7 +1,7 @@
 import { ProfileDetails, ProfileRole } from "@/lib/api/services/profiles/general";
 import { ColumnDef } from "../ui/table/BasicTable";
-import ProfileAprovalModal from "../modals/profile/ProfileAprovalModal";
-import Button from "../ui/button/Button";
+import ProfileViewModal from "../modals/profile/ProfileViewModal";
+import ProfileApproval from "./_components/ProfileApproval";
 
 const createActionColumn = (role: ProfileRole): ColumnDef<ProfileDetails>[] => [
   {
@@ -9,8 +9,8 @@ const createActionColumn = (role: ProfileRole): ColumnDef<ProfileDetails>[] => [
     header: "Action",
     cell: (row) => (
       <div className="flex gap-2 items-center">
-        <ProfileAprovalModal profileId={row.id} role={role} />
-        <Button size="sm">Approve</Button>
+        <ProfileViewModal profileId={row.id} role={role} />
+        <ProfileApproval userId={row.userId} isApproved={row.email_verified} />
       </div>
     ),
   },

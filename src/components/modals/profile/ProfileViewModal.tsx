@@ -34,7 +34,7 @@ function DetailItem({ label, value }: { label: string; value?: string | null }) 
   );
 }
 
-export default function ProfileAprovalModal({ profileId, role }: ProfileAprovalModalProps) {
+export default function ProfileViewModal({ profileId, role }: ProfileAprovalModalProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const { data, isLoading } = useQuery({
@@ -151,9 +151,7 @@ export default function ProfileAprovalModal({ profileId, role }: ProfileAprovalM
                         ))}
                       </div>
                     ) : (
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        No images uploaded
-                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">No images uploaded</p>
                     )}
                   </Section>
                 </>

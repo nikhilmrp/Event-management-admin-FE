@@ -37,6 +37,7 @@ const navItems: NavItem[] = [
     subItems: [
       { name: "Pending", path: "/pending-events", pro: false },
       { name: "Confirmed", path: "/confirmed-events", pro: false },
+      { name: "Clients", path: "/clients", pro: false },
     ],
   },
   {

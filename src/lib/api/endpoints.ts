@@ -10,4 +10,6 @@ export const API_ENDPOINTS = {
   GET_PROFILE_DETAILS: "/profile/general/get-profile-details",
   GET_PROFILE_DETAILS_BY_ID: "/profile/general/get-profile-details-by-id",
   APPROVE_USER_PROFILE: "/profile/general/approve-user-profile",
+  GET_ALL_CLIENTS: "/agent-clients/clients",
+  GET_ALL_EVENTS: "/agent-clients/events",
 };

@@ -1,5 +1,7 @@
+import dayjs from "dayjs";
+
 export const formatDate = (dateStr?: string) =>
-  dateStr ? new Date(dateStr).toLocaleDateString() : "—";
+  dateStr ? dayjs(dateStr).format("DD-MM-YYYY") : "—";
 
 export const formatCurrency = (amount?: number) =>
   amount === undefined || amount === null

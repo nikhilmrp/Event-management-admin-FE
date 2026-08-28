@@ -21,12 +21,15 @@ export interface ProfileDetails {
   vendor_categories?: string[];
 }
 
-export const getProfileDetailsByRole = async (role: ProfileRole, emailVerified?: boolean) => {
+export const getProfileDetailsByRole = async (
+  role: ProfileRole,
+  emailVerified?: boolean,
+  search?: string
+) => {
   try {
-    const query =
-      emailVerified === undefined
-        ? `role=${role}`
-        : `role=${role}&email_verified=${emailVerified}`;
+    let query = `role=${role}`;
+    if (emailVerified !== undefined) query += `&email_verified=${emailVerified}`;
+    if (search) query += `&search=${encodeURIComponent(search)}`;
     const response = await networkCall<ProfileDetails[]>(
       `${API_ENDPOINTS.GET_PROFILE_DETAILS}?${query}`,
       {

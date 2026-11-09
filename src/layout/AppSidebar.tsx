@@ -49,16 +49,6 @@ const navItems: NavItem[] = [
     ],
   },
   {
-    icon: <UserCircleIcon />,
-    name: "Bank Details",
-    path: "/bank-details",
-    subItems: [
-      { name: "Agent", path: "/agent-bankdetails", pro: false },
-      { name: "Vendor", path: "/vendor-bankdetails", pro: false },
-    ],
-  },
-
-  {
     name: "Configurations",
     icon: <ListIcon />,
     subItems: [

@@ -10,6 +10,7 @@ export interface ColumnDef<T> {
   cell: (row: T, index: number) => React.ReactNode;
   headerClassName?: string;
   cellClassName?: string;
+  width?: number | string; // e.g. 150 (px) or "12rem"; also used as the column's min width
 }
 
 interface BaseBasicTableProps<T> {
@@ -45,6 +46,11 @@ type BasicTableProps<T> = BaseBasicTableProps<T> &
 const headerCellClass =
   "px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400";
 const bodyCellClass = "px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400";
+
+function getColumnStyle<T>(column: ColumnDef<T>): React.CSSProperties | undefined {
+  if (column.width === undefined) return undefined;
+  return { width: column.width, minWidth: column.width };
+}
 
 function defaultGetRowId<T>(row: T, index: number): string | number {
   const record = row as Record<string, unknown>;
@@ -136,11 +142,7 @@ function BasicTable<T>({
                 {enableRowSelection && (
                   <TableCell isHeader className={`${headerCellClass} w-12`}>
                     {enableMultiRowSelection ? (
-                      <Checkbox
-                        id="select-all-rows"
-                        checked={isAllSelected}
-                        onChange={toggleAll}
-                      />
+                      <Checkbox id="select-all-rows" checked={isAllSelected} onChange={toggleAll} />
                     ) : null}
                   </TableCell>
                 )}
@@ -149,6 +151,7 @@ function BasicTable<T>({
                     key={column.key}
                     isHeader
                     className={column.headerClassName ?? headerCellClass}
+                    style={getColumnStyle(column)}
                   >
                     {column.header}
                   </TableCell>
@@ -201,6 +204,7 @@ function BasicTable<T>({
                         <TableCell
                           key={column.key}
                           className={column.cellClassName ?? bodyCellClass}
+                          style={getColumnStyle(column)}
                         >
                           {column.cell(row, index)}
                         </TableCell>

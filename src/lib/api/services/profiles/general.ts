@@ -6,6 +6,12 @@ export enum ProfileRole {
   VENDOR = "vendor",
 }
 
+export enum ProfileStatus {
+  ACTIVE = "active",
+  INACTIVE = "inactive",
+  SUSPENDED = "suspended",
+}
+
 export interface ProfileDetails {
   id: number;
   username: string;
@@ -130,6 +136,26 @@ export const approveUserProfile = async (userId: number | string) => {
   try {
     const response = await networkCall<ApproveUserProfileResponse>(
       `${API_ENDPOINTS.APPROVE_USER_PROFILE}/${userId}`,
+      {
+        method: "PATCH",
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export interface SuspendUserResponse {
+  id: number;
+  status: string;
+  email_verified: boolean;
+}
+
+export const suspendUser = async (userId: number | string) => {
+  try {
+    const response = await networkCall<SuspendUserResponse>(
+      `${API_ENDPOINTS.SUSPEND_USER}/${userId}`,
       {
         method: "PATCH",
       }

@@ -14,6 +14,7 @@ import {
 interface ProfileAprovalModalProps {
   profileId: number | string;
   role: ProfileRole;
+  trigger?: React.ReactNode;
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -34,7 +35,7 @@ function DetailItem({ label, value }: { label: string; value?: string | null }) 
   );
 }
 
-export default function ProfileViewModal({ profileId, role }: ProfileAprovalModalProps) {
+export default function ProfileViewModal({ profileId, role, trigger }: ProfileAprovalModalProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const { data, isLoading } = useQuery({
@@ -56,9 +57,13 @@ export default function ProfileViewModal({ profileId, role }: ProfileAprovalModa
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="text-gray-500 hover:text-brand-500 dark:text-gray-400 dark:hover:text-brand-500"
+        className={
+          trigger
+            ? undefined
+            : "text-gray-500 hover:text-brand-500 dark:text-gray-400 dark:hover:text-brand-500"
+        }
       >
-        <EyeIcon className="size-5" />
+        {trigger ?? <EyeIcon className="size-5" />}
       </button>
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} className="w-full max-w-2xl m-4">
         <div className="max-h-[85vh] overflow-y-auto p-6">

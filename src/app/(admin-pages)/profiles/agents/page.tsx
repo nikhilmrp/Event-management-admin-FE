@@ -47,7 +47,7 @@ function Page() {
           />
         </div>
       </div>
-      <BasicTable columns={AGENT_PROFILE_COLUMNS} data={agents} loading={false} />
+      <BasicTable columns={AGENT_PROFILE_COLUMNS} data={agents} loading={isLoading} />
     </>
   );
 }
